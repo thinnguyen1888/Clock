@@ -1,14 +1,17 @@
 import "./App.css";
+import React, { Component } from "react";
 import Clock from "./Components/Clock";
 import Analog from "./Components/Analog";
 
-function App() {
-  return (
-    <di>
-      <Clock />
-      <Analog />
-    </di>
-  );
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Clock />
+        <Analog />
+      </div>
+    );
+  }
 }
 
 export default App;

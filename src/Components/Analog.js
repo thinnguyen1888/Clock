@@ -1,28 +1,64 @@
 import React, { Component } from "react";
 
-export default class Analog extends Component {
+class Analog extends Component {
+  canvas = "";
+  ctx = "";
+  radius = "";
+
   constructor(props) {
     super(props);
-    this.state = { date: new Date() };
+    this.state = { date: new Date(), isPause: false };
   }
 
   componentDidMount() {
-    const { canvas } = this.refs;
-    const ctx = canvas.getContext("2d");
-    let radius = canvas.height / 2;
-    ctx.translate(radius, radius);
-    radius = radius * 0.9;
+    // Draw clock watcher
+    this.canvas = document.getElementById("canvas");
+    this.ctx = this.canvas.getContext("2d");
+    this.radius = this.canvas.height / 2;
+    this.ctx.translate(this.radius, this.radius);
+    this.radius = this.radius * 0.9;
 
-    let drawClock = () => {
-      this.drawFace(ctx, radius);
-      this.drawNumbers(ctx, radius);
-      this.drawTime(ctx, radius);
-    };
-    setInterval(drawClock, 1000);
+    this.timerID = setInterval(() => {
+      if (!this.state.isPause) {
+        this.tick();
+        // drawClock
+      } else {
+        console.log("PAUSED");
+      }
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  pause() {
+    console.log("{ isPause: true }");
+    this.setState({ isPause: true });
+  }
+
+  resume() {
+    console.log("{ isPause: fasle }");
+    this.setState({ isPause: false });
+  }
+
+  tick() {
+    console.log("Tick", this.state.date);
+    this.setState({
+      date: new Date(),
+    });
+    this.drawClock(this.state.date);
+  }
+
+  // Functions re-draw clock watcher
+  drawClock(date) {
+    this.drawFace(this.ctx, this.radius);
+    this.drawNumbers(this.ctx, this.radius);
+    this.drawTime(this.ctx, this.radius, date);
   }
 
   drawFace(ctx, radius) {
-    let grad;
+    var grad;
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, 2 * Math.PI);
     ctx.fillStyle = "white";
@@ -41,8 +77,8 @@ export default class Analog extends Component {
   }
 
   drawNumbers(ctx, radius) {
-    let ang;
-    let num;
+    var ang;
+    var num;
     ctx.font = radius * 0.15 + "px arial";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
@@ -58,11 +94,12 @@ export default class Analog extends Component {
     }
   }
 
-  drawTime(ctx, radius) {
-    let now = new Date();
-    let hour = now.getHours();
-    let minute = now.getMinutes();
-    let second = now.getSeconds();
+  drawTime(ctx, radius, date) {
+    //var now = new Date();
+    var now = date;
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
     //hour
     hour = hour % 12;
     hour =
@@ -88,17 +125,25 @@ export default class Analog extends Component {
     ctx.stroke();
     ctx.rotate(-pos);
   }
+
   render() {
     return (
       <div>
-        <canvas
-          width="400px"
-          height="400px"
-          style={{ backgroundColor: "#333" }}
-          className="Canvas"
-          ref="canvas"
-        ></canvas>
+        <div>
+          <button onClick={() => this.pause()}>Pause</button>
+          <button onClick={() => this.resume()}>Resume</button>
+        </div>
+        <div>
+          <canvas
+            id="canvas"
+            width="200"
+            height="200"
+            style={{ backgroundColor: "#333" }}
+          ></canvas>
+        </div>
       </div>
     );
   }
 }
+
+export default Analog;
