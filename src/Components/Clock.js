@@ -51,15 +51,15 @@ export default class Clock extends Component {
     clearInterval(this.timerID);
   }
 
-  pause() {
+  pause = () => {
     console.log("{ isPause: true }");
     this.setState({ isPause: true });
-  }
+  };
 
-  resume() {
+  resume = () => {
     console.log("{ isPause: fasle }");
     this.setState({ isPause: false });
-  }
+  };
 
   tick() {
     this.setState({
@@ -157,8 +157,8 @@ export default class Clock extends Component {
     return (
       <div>
         <div>
-          <button onClick={() => this.pause()}>Pause</button>
-          <button onClick={() => this.resume()}>Resume</button>
+          <button onClick={this.pause}>Pause</button>
+          <button onClick={this.resume}>Resume</button>
         </div>
         <div>
           <canvas
