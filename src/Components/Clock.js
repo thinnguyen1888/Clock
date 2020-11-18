@@ -17,6 +17,7 @@ export default class Clock extends Component {
     this.state = {
       date: this.getCurrentDatewithtimezone(this.country, this.tz),
       isPause: false,
+      show: true,
     };
   }
 
@@ -153,23 +154,37 @@ export default class Clock extends Component {
     );
   };
 
+  toggleChange = () => {
+    this.setState((state) => ({
+      show: !this.state.show,
+    }));
+  };
+
   render() {
+    const clock = (
+      <div>
+        <canvas
+          id={"canvas-" + this.id}
+          width="400"
+          height="400"
+          style={{ backgroundColor: "#333" }}
+        ></canvas>
+      </div>
+    );
     return (
       <div>
         <div>
           <button onClick={this.pause}>Pause</button>
           <button onClick={this.resume}>Resume</button>
         </div>
-        <div>
-          <canvas
-            id={"canvas-" + this.id}
-            width="400"
-            height="400"
-            style={{ backgroundColor: "#333" }}
-          ></canvas>
-        </div>
+        {this.state.show ? clock : ""}
         <div>
           <button onClick={this.changeDay}>Hôm nay là thứ mấy ?</button>
+        </div>
+        <div>
+          <button onClick={this.toggleChange}>
+            {this.state.show ? "Hide" : "Show"}
+          </button>
         </div>
       </div>
     );
