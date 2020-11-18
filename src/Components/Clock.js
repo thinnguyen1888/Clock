@@ -18,6 +18,7 @@ export default class Clock extends Component {
       date: this.getCurrentDatewithtimezone(this.country, this.tz),
       isPause: false,
       show: true,
+      afterClickShowHide: false,
     };
   }
 
@@ -50,6 +51,18 @@ export default class Clock extends Component {
 
   componentWillUnmount() {
     clearInterval(this.timerID);
+  }
+
+  componentDidUpdate() {
+    if (this.state.afterClickShowHide && this.state.showClock) {
+      // Draw clock watcher
+      this.canvas = document.getElementById("canvas" + this.canvasID);
+      this.ctx = this.canvas.getContext("2d");
+      this.radius = this.canvas.height / 2;
+      this.ctx.translate(this.radius, this.radius);
+      this.radius = this.radius * 0.9;
+      this.setState({ afterClickShowHide: false });
+    }
   }
 
   pause = () => {
@@ -155,9 +168,12 @@ export default class Clock extends Component {
   };
 
   toggleChange = () => {
-    this.setState((state) => ({
-      show: !this.state.show,
-    }));
+    this.setState({ afterClickShowHide: true });
+    if (this.state.show) {
+      this.setState({ show: false });
+    } else {
+      this.setState({ show: true });
+    }
   };
 
   render() {
