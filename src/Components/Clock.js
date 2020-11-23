@@ -183,7 +183,11 @@ export default class Clock extends Component {
           id={"canvas-" + this.id}
           width="400"
           height="400"
-          style={{ backgroundColor: "#333" }}
+          style={
+            !this.state.show
+              ? { backgroundColor: "#333", display: "none" }
+              : { backgroundColor: "#333" }
+          }
         ></canvas>
       </div>
     );
@@ -193,7 +197,7 @@ export default class Clock extends Component {
           <button onClick={this.pause}>Pause</button>
           <button onClick={this.resume}>Resume</button>
         </div>
-        {this.state.show ? clock : ""}
+        {clock}
         <div>
           <button onClick={this.changeDay}>Hôm nay là thứ mấy ?</button>
         </div>
